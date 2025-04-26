@@ -1,0 +1,14 @@
+<h2>Crear Modulo</h2>
+<div class="container">
+  <form (ngSubmit)="guardarModulo()">
+    <div class="form-group mb-2">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input [(ngModel)]="nombre" type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <div class="form-group mb-2">
+      <label for="nro" class="form-label">Nro</label>
+      <input [(ngModel)]="nro" type="text" class="form-control" id="nro" name="nro" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+  </form>
+</div>

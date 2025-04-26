@@ -1,0 +1,38 @@
+<h4>Crear Horario</h4>
+<div class="container">
+  <form (ngSubmit)="guardarHorario()">
+    <div class="form-group mb-2">
+      <label for="dia" class="form-label">Día</label>
+      <select [(ngModel)]="dia" class="form-control" id="dia" name="dia" required>
+        <option disabled selected value="">Seleccione día</option>
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miercoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+        <option value="Viernes">Viernes</option>
+        <option value="Sabado">Sábado</option>
+        <option value="Domingo">Domingo</option>
+      </select>
+    </div>
+
+    <div class="form-group mb-2">
+      <label for="horainicio" class="form-label">Hora Inicio</label>
+      <input [(ngModel)]="horainicio" type="time" class="form-control" id="horainicio" name="horainicio" required>
+    </div>
+
+    <div class="form-group mb-2">
+      <label for="horafin" class="form-label">Hora Fin</label>
+      <input [(ngModel)]="horafin" type="time" class="form-control" id="horafin" name="horafin" required>
+    </div>
+
+    <div class="form-group mb-2">
+      <label for="aula" class="form-label">Aula</label>
+      <select [(ngModel)]="selectedAula" class="form-control" id="aula" name="aula" required>
+        <option disabled selected value="">Seleccione un Aula</option>
+        <option *ngFor="let aula of aulas" [value]="aula.id">{{ aula.nombre }}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+  </form>
+</div>

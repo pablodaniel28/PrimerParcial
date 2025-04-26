@@ -1,0 +1,8 @@
+input[type="text"] {
+  border: 1px solid #ccc;
+  padding: 2px;
+  font-size: 12px;
+  font-family: sans-serif;
+  background-color: white;
+  text-align: center;
+}

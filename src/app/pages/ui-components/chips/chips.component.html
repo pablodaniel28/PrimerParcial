@@ -1,0 +1,199 @@
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Facultad</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <button
+      mat-flat-button
+      color="primary"
+      matTooltip="Info about the action"
+      class="mb-3"
+    >
+      Agregar
+    </button>
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td> Facultad de Ingeniería en Ciencias de la Computación y Telecomunicaciones
+          </td>
+
+          <td>
+            <button class="btn btn-primary btn-sm me-1" title="Editar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+              </svg>
+            </button>
+            <button class="btn btn-danger btn-sm" title="Eliminar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+              </svg>
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
+
+
+
+
+<!--
+
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Chips</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <div class="row">
+      <div class="col-lg-6">
+
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Basic</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <mat-chip-listbox aria-label="Fish selection">
+              <mat-chip-option class="f-s-14" color="primary"
+                >One fish</mat-chip-option
+              >
+              <mat-chip-option class="f-s-14">Two fish</mat-chip-option>
+              <mat-chip-option class="f-s-14" color="accent" selected
+                >Accent fish</mat-chip-option
+              >
+              <mat-chip-option class="f-s-14" color="warn"
+                >Warn fish</mat-chip-option
+              >
+            </mat-chip-listbox>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-lg-6">
+
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Avatar</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <mat-chip-listbox aria-label="Dog selection">
+              <mat-chip class="f-s-14">
+                <img
+                  matChipAvatar
+                  src="/assets/images/profile/user-1.jpg"
+                  alt="Photo of a Shiba Inu"
+                />
+                Anderson
+              </mat-chip>
+              <mat-chip class="f-s-14" color="primary">
+                <img
+                  matChipAvatar
+                  src="/assets/images/profile/user-2.jpg"
+                  alt="Photo of a Shiba Inu"
+                />
+                Monty
+              </mat-chip>
+              <mat-chip class="f-s-14" color="accent">
+                <img
+                  matChipAvatar
+                  src="/assets/images/profile/user-3.jpg"
+                  alt="Photo of a Shiba Inu"
+                />
+                Mathew
+              </mat-chip>
+            </mat-chip-listbox>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-lg-6">
+
+
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Drag n Drop</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <mat-chip-set
+              class="example-chip"
+              cdkDropList
+              cdkDropListOrientation="horizontal"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <mat-chip
+                class="example-box f-s-14"
+                cdkDrag
+                *ngFor="let vegetable of vegetables"
+              >
+                {{ vegetable.name }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-lg-6">
+
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Stacked </mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
+              <mat-chip-option *ngFor="let chip of availableColors" selected [color]="chip.color">
+                {{chip.name}}
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-12">
+
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Input</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Favorite Fruits</mat-label>
+              <mat-chip-grid #chipGrid aria-label="Enter fruits">
+                <mat-chip-row
+                  *ngFor="let fruit of fruits"
+                  (removed)="remove(fruit)"
+                  [editable]="true"
+                  (edited)="edit(fruit, $event)"
+                  [aria-description]="'press enter to edit ' + fruit.name" class="f-s-14"
+                >
+                  {{ fruit.name }}
+                  <button
+                    matChipRemove
+                    [attr.aria-label]="'remove ' + fruit.name"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+                <input
+                  placeholder="New fruit..."
+                  [matChipInputFor]="chipGrid"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event)"
+                />
+              </mat-chip-grid>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card> -->

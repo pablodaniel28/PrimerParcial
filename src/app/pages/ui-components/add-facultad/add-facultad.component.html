@@ -1,0 +1,15 @@
+<h2>Crear Facultad</h2>
+<div class="container">
+  <form (ngSubmit)="guardarFacultad()">
+
+    <div class="form-group mb-2">
+      <label for="nombre" class="form-label">Codigo</label>
+      <input [(ngModel)]="codigo" type="text" class="form-control" id="codigo" name="codigo" required>
+    </div>
+    <div class="form-group mb-2">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input [(ngModel)]="nombre" type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+  </form>
+</div>

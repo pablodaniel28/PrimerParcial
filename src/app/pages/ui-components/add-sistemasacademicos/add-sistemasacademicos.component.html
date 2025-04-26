@@ -1,0 +1,12 @@
+<h2>Crear Sistema Academico</h2>
+<div class="container">
+  <form (ngSubmit)="guardarSistemaacademico()">
+    <div class="form-group mb-2">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input [(ngModel)]="nombre" type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+  </form>
+</div>
+

@@ -1,0 +1,60 @@
+<div class="container mt-4"></div>
+<!-- Botones de Acción -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- Botón para Crear Sesión -->
+  <button class="btn btn-primary d-flex align-items-center" (click)="createSession()">
+    <i class="fas fa-plus-circle mr-2"></i> Crear Sesión
+  </button>
+
+  <!-- Botón para Exportar a XMI -->
+
+</div>
+
+<!-- Mostrar el enlace de la sesión si existe -->
+<div *ngIf="sessionLink" class="alert alert-info d-flex justify-content-between align-items-center">
+  <div>
+    <strong>Sesión creada: </strong>
+    <a [href]="sessionLink" class="text-decoration-none">{{ sessionLink }}</a>
+  </div>
+  <!-- Botón para copiar el enlace -->
+  <button class="btn btn-outline-primary btn-sm ml-3" (click)="copyLink()">
+    <i class="fas fa-copy"></i> Copiar enlace
+  </button>
+</div>
+
+<div class="joint-app joint-theme-modern">
+  <div class="app-header d-flex align-items-center justify-content-between">
+    <div class="app-title">
+      <h1 class="m-0">Diagramador</h1>
+    </div>
+    <div class="toolbar d-flex gap-3">
+
+      <button mat-raised-button color="accent" (click)="sendDiagramWithContext()">Generar Entidades</button>
+      <button mat-raised-button color="warn" (click)="exportDiagram()">Exportar Diagrama</button>
+      <button mat-raised-button color="primary" (click)="createLinkWithIntermediateClass()">Crear Línea con Clase
+        Intermedia</button>
+    </div>
+  </div>
+
+  <div class="app-body d-flex flex-column mt-3">
+
+    <div class="d-flex flex-grow-1 mt-4">
+      <div class="stencil-container mr-3 p-3 bg-white shadow-sm rounded">
+        <h3 class="mb-3">Herramientas</h3>
+        <!-- Aquí podrías añadir las herramientas para tu stencil -->
+      </div>
+
+      <div class="paper-container flex-grow-1 p-3 bg-white shadow-sm rounded">
+        <!-- Aquí estará el diagrama -->
+      </div>
+
+      <div class="inspector-container hidden p-3 bg-white shadow-sm rounded ml-3">
+        <!-- Aquí estará el inspector -->
+      </div>
+    </div>
+  </div>
+
+  <div class="navigator-container mt-3 bg-light p-2 rounded shadow-sm">
+    <!-- Aquí estará el navegador -->
+  </div>
+</div>

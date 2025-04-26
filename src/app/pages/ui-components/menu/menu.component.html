@@ -1,0 +1,244 @@
+<mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Grupo</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <button
+      mat-flat-button
+      color="primary"
+      matTooltip="Info about the action"
+      class="mb-3"
+    >
+      Agregar
+    </button>
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td> SA
+          </td>
+
+          <td>
+            <button class="btn btn-primary btn-sm me-1" title="Editar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+              </svg>
+            </button>
+            <button class="btn btn-danger btn-sm" title="Eliminar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+              </svg>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td> SB
+          </td>
+
+          <td>
+            <button class="btn btn-primary btn-sm me-1" title="Editar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+              </svg>
+            </button>
+            <button class="btn btn-danger btn-sm" title="Eliminar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
+
+
+<!-- <mat-card class="cardWithShadow theme-card">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Menu</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    <div class="row">
+      <div class="col-sm-6 col-lg-4">
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Basic</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <button
+              mat-flat-button
+              color="primary"
+              class="m-t-8"
+              [matMenuTriggerFor]="menu"
+            >
+              Menu
+            </button>
+            <mat-menu #menu="matMenu" class="cardWithShadow">
+              <button mat-menu-item>Item 1</button>
+              <button mat-menu-item>Item 2</button>
+            </mat-menu>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>with Icons</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Example icon-button with a menu"
+            >
+              <mat-icon>
+                <i-tabler name="dots" class="icon-20"></i-tabler>
+              </mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" class="cardWithShadow">
+              <button mat-menu-item>
+                <mat-icon>dialpad</mat-icon>
+                <span>Redial</span>
+              </button>
+              <button mat-menu-item disabled>
+                <mat-icon>voicemail</mat-icon>
+                <span>Check voice mail</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                <span>Disable alerts</span>
+              </button>
+            </mat-menu>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Nested Menu</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <button
+              mat-flat-button
+              color="primary"
+              [matMenuTriggerFor]="animals"
+              class="m-t-8"
+            >
+              Animal index
+            </button>
+            <mat-menu class="cardWithShadow" #animals="matMenu">
+              <button mat-menu-item [matMenuTriggerFor]="vertebrates">
+                Vertebrates
+              </button>
+              <button mat-menu-item [matMenuTriggerFor]="invertebrates">
+                Invertebrates
+              </button>
+            </mat-menu>
+
+            <mat-menu class="cardWithShadow" #vertebrates="matMenu">
+              <button mat-menu-item [matMenuTriggerFor]="fish">Fishes</button>
+              <button mat-menu-item [matMenuTriggerFor]="amphibians">
+                Amphibians
+              </button>
+              <button mat-menu-item [matMenuTriggerFor]="reptiles">
+                Reptiles
+              </button>
+              <button mat-menu-item>Birds</button>
+              <button mat-menu-item>Mammals</button>
+            </mat-menu>
+
+            <mat-menu class="cardWithShadow" #invertebrates="matMenu">
+              <button mat-menu-item>Insects</button>
+              <button mat-menu-item>Molluscs</button>
+              <button mat-menu-item>Crustaceans</button>
+              <button mat-menu-item>Corals</button>
+              <button mat-menu-item>Arachnids</button>
+              <button mat-menu-item>Velvet worms</button>
+              <button mat-menu-item>Horseshoe crabs</button>
+            </mat-menu>
+
+            <mat-menu class="cardWithShadow" #fish="matMenu">
+              <button mat-menu-item>Baikal oilfish</button>
+              <button mat-menu-item>Bala shark</button>
+              <button mat-menu-item>Ballan wrasse</button>
+              <button mat-menu-item>Bamboo shark</button>
+              <button mat-menu-item>Banded killifish</button>
+            </mat-menu>
+
+            <mat-menu class="cardWithShadow" #amphibians="matMenu">
+              <button mat-menu-item>Sonoran desert toad</button>
+              <button mat-menu-item>Western toad</button>
+              <button mat-menu-item>Arroyo toad</button>
+              <button mat-menu-item>Yosemite toad</button>
+            </mat-menu>
+
+            <mat-menu class="cardWithShadow" #reptiles="matMenu">
+              <button mat-menu-item>Banded Day Gecko</button>
+              <button mat-menu-item>Banded Gila Monster</button>
+              <button mat-menu-item>Black Tree Monitor</button>
+              <button mat-menu-item>Blue Spiny Lizard</button>
+              <button mat-menu-item disabled>Velociraptor</button>
+            </mat-menu>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-12">
+        <mat-card class="b-1 shadow-none">
+          <mat-card-header>
+            <mat-card-title>Positions</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="b-t-1">
+            <div class="row">
+              <div class="col-sm-3">
+                <button mat-flat-button color="primary" class="w-100" [matMenuTriggerFor]="aboveMenu">
+                  Above
+                </button>
+                <mat-menu class="cardWithShadow" #aboveMenu="matMenu" yPosition="above">
+                  <button mat-menu-item>Item 1</button>
+                  <button mat-menu-item>Item 2</button>
+                </mat-menu>
+              </div>
+              <div class="col-sm-3">
+                <button mat-flat-button color="accent" class="w-100" [matMenuTriggerFor]="belowMenu">
+                  Below
+                </button>
+                <mat-menu class="cardWithShadow" #belowMenu="matMenu" yPosition="below">
+                  <button mat-menu-item>Item 1</button>
+                  <button mat-menu-item>Item 2</button>
+                </mat-menu>
+              </div>
+              <div class="col-sm-3">
+                <button mat-flat-button color="warn" class="w-100" [matMenuTriggerFor]="beforeMenu">
+                  Before
+                </button>
+                <mat-menu class="cardWithShadow" #beforeMenu="matMenu" xPosition="before">
+                  <button mat-menu-item>Item 1</button>
+                  <button mat-menu-item>Item 2</button>
+                </mat-menu>
+              </div>
+              <div class="col-sm-3">
+                <button mat-flat-button color="primary" class="w-100" [matMenuTriggerFor]="afterMenu">
+                  After
+                </button>
+                <mat-menu class="cardWithShadow" #afterMenu="matMenu" xPosition="after">
+                  <button mat-menu-item>Item 1</button>
+                  <button mat-menu-item>Item 2</button>
+                </mat-menu>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card> -->
