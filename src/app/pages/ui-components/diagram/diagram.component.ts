@@ -37,228 +37,229 @@ export class DiagramComponent implements OnInit {
 
 
   private ZIP_STRUCTURE = {
-    controller: 'Back_End_PHP/controllers/',
-    model: 'Back_End_PHP/models/',
-    view: 'Back_End_PHP/views/',
-    database: 'Back_End_PHP/database/',
+    controller: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/controller/',
+    entity: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/entity/',
+    repository: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/repository/',
+    service: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/service/',
   };
 
-  // ===== PLANTILLAS PARA PHP =====
+  RepositoryTemplate: string = `
+  package com.phegondev.usersmanagementsystem.repository;
 
-  // MODELO
-  PHP_MODEL_TEMPLATE: string = `
-  <?php
-  namespace App\\models;
+  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
+  import org.springframework.data.jpa.repository.JpaRepository;
+  import org.springframework.stereotype.Repository;
 
-  use App\\database\\Conexion;
-  use PDO;
-
-  class \${ENTITY} {
-  \${ATTRIBUTES}
-
-  public function __construct(\${CONSTRUCTOR_PARAMETERS}) {
-  \${CONSTRUCTOR_ASSIGNMENTS}
+  @Repository
+  public interface \${ENTITY}Repository extends JpaRepository<\${ENTITY}, Long> {
   }
-
-  public function create() {
-      \$db = (new Conexion())->getConexion();
-      \$query = "INSERT INTO \${ENTITY_LOWER} (\${FIELDS}) VALUES (\${PLACEHOLDERS})";
-      \$stmt = \$db->prepare(\$query);
-  \${BIND_PARAMETERS}
-      return \$stmt->execute();
-  }
-
-  public function read(\$id) {
-      \$db = (new Conexion())->getConexion();
-      \$query = "SELECT * FROM \${ENTITY_LOWER} WHERE id = :id";
-      \$stmt = \$db->prepare(\$query);
-      \$stmt->bindParam(':id', \$id);
-      \$stmt->execute();
-      return \$stmt->fetch(PDO::FETCH_ASSOC);
-  }
-
-  public function update() {
-      \$db = (new Conexion())->getConexion();
-      \$query = "UPDATE \${ENTITY_LOWER} SET \${UPDATE_FIELDS} WHERE id = :id";
-      \$stmt = \$db->prepare(\$query);
-  \${BIND_PARAMETERS}
-      \$stmt->bindParam(':id', \$this->id);
-      return \$stmt->execute();
-  }
-
-  public function delete(\$id) {
-      \$db = (new Conexion())->getConexion();
-      \$query = "DELETE FROM \${ENTITY_LOWER} WHERE id = :id";
-      \$stmt = \$db->prepare(\$query);
-      \$stmt->bindParam(':id', \$id);
-      return \$stmt->execute();
-  }
-  }
-  ?>
   `;
 
 
-  PHP_CONTROLLER_TEMPLATE: string = `
-  <?php
-  namespace App\\controllers;
+  ServiceInterfaceTemplate: string = `
+  package com.phegondev.usersmanagementsystem.service;
 
-  require_once '../models/\${ENTITY}.php';
-  require_once '../database/Conexion.php';
+  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
+  import java.util.List;
+  import java.util.Optional;
 
-  use App\\models\\\${ENTITY};
-  use App\\database\\Conexion;
+  public interface \${ENTITY}Service {
+      \${ENTITY} save\${ENTITY}(\${ENTITY} \${entityLower});
+      List<\${ENTITY}> getAll\${ENTITY}s();
+      Optional<\${ENTITY}> get\${ENTITY}ById(Long id);
+      \${ENTITY} update\${ENTITY}(Long id, \${ENTITY} \${entityLower}Details);
+      void delete\${ENTITY}(Long id);
+  }
+  `;
+  ServiceImplTemplate: string = `
+  package com.phegondev.usersmanagementsystem.service.impl;
 
-  class \${ENTITY}Controller {
+  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
+  import com.phegondev.usersmanagementsystem.repository.\${ENTITY}Repository;
+  import com.phegondev.usersmanagementsystem.service.\${ENTITY}Service;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Service;
 
-      public function create(\$data) {
-          \$model = new \${ENTITY}();
-  \${ASSIGN_MODEL_PROPERTIES}
-          return \$model->create();
+  import java.util.List;
+  import java.util.Optional;
+
+  @Service
+  public class \${ENTITY}ServiceImpl implements \${ENTITY}Service {
+
+      @Autowired
+      private \${ENTITY}Repository \${entityLower}Repository;
+
+      @Override
+      public \${ENTITY} save\${ENTITY}(\${ENTITY} \${entityLower}) {
+          return \${entityLower}Repository.save(\${entityLower});
       }
 
-      public function readAll() {
-          \$db = (new Conexion())->getConexion();
-          \$query = "SELECT * FROM \${ENTITY_LOWER}";
-          \$stmt = \$db->query(\$query);
-          return \$stmt->fetchAll(\\PDO::FETCH_ASSOC);
+      @Override
+      public List<\${ENTITY}> getAll\${ENTITY}s() {
+          return \${entityLower}Repository.findAll();
       }
 
-      public function readById(\$id) {
-          \$model = new \${ENTITY}();
-          return \$model->read(\$id);
+      @Override
+      public Optional<\${ENTITY}> get\${ENTITY}ById(Long id) {
+          return \${entityLower}Repository.findById(id);
       }
 
-      public function update(\$id, \$data) {
-          \$model = new \${ENTITY}();
-          \$model->id = \$id;
-  \${ASSIGN_MODEL_PROPERTIES}
-          return \$model->update();
+      @Override
+      public \${ENTITY} update\${ENTITY}(Long id, \${ENTITY} \${entityLower}Details) {
+          \${ENTITY} \${entityLower} = \${entityLower}Repository.findById(id)
+                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
+          // Actualiza los campos necesarios
+          return \${entityLower}Repository.save(\${entityLower});
       }
 
-      public function delete(\$id) {
-          \$model = new \${ENTITY}();
-          return \$model->delete(\$id);
+      @Override
+      public void delete\${ENTITY}(Long id) {
+          \${ENTITY} \${entityLower} = \${entityLower}Repository.findById(id)
+                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
+          \${entityLower}Repository.delete(\${entityLower});
       }
   }
-  ?>
   `;
+  ControllerTemplate: string = `
+  package com.phegondev.usersmanagementsystem.controller;
 
+  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
+  import com.phegondev.usersmanagementsystem.service.\${ENTITY}Service;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.http.ResponseEntity;
+  import org.springframework.web.bind.annotation.*;
+  import java.util.List;
 
-  // CONEXIÓN A BASE DE DATOS
-  PHP_DATABASE_TEMPLATE: string = `
-  <?php
-  class Conexion {
-      private \$host = 'localhost';
-      private \$dbname = 'nombre_base';
-      private \$username = 'root';
-      private \$password = '';
+  @RestController
+  @RequestMapping("/api/\${entityLower}s")
+  public class \${ENTITY}Controller {
 
-      public function getConexion() {
-          try {
-              \$conn = new PDO("mysql:host=\$this->host;dbname=\$this->dbname", \$this->username, \$this->password);
-              \$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-              return \$conn;
-          } catch (PDOException \$e) {
-              die("Error de conexión: " . \$e->getMessage());
-          }
+      @Autowired
+      private \${ENTITY}Service \${entityLower}Service;
+
+      @PostMapping
+      public \${ENTITY} create\${ENTITY}(@RequestBody \${ENTITY} \${entityLower}) {
+          return \${entityLower}Service.save\${ENTITY}(\${entityLower});
+      }
+
+      @GetMapping
+      public List<\${ENTITY}> getAll\${ENTITY}s() {
+          return \${entityLower}Service.getAll\${ENTITY}s();
+      }
+
+      @GetMapping("/{id}")
+      public ResponseEntity<\${ENTITY}> get\${ENTITY}ById(@PathVariable Long id) {
+          \${ENTITY} \${entityLower} = \${entityLower}Service.get\${ENTITY}ById(id)
+                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
+          return ResponseEntity.ok().body(\${entityLower});
+      }
+
+      @PutMapping("/{id}")
+      public \${ENTITY} update\${ENTITY}(@PathVariable Long id, @RequestBody \${ENTITY} \${entityLower}Details) {
+          return \${entityLower}Service.update\${ENTITY}(id, \${entityLower}Details);
+      }
+
+      @DeleteMapping("/{id}")
+      public ResponseEntity<Void> delete\${ENTITY}(@PathVariable Long id) {
+          \${entityLower}Service.delete\${ENTITY}(id);
+          return ResponseEntity.noContent().build();
       }
   }
-  ?>
   `;
+  // Función para reemplazar los marcadores de posición en las plantillas
+  generateContent(template: string, entityName: string): string {
+    const entityLower = entityName.charAt(0).toLowerCase() + entityName.slice(1);
+    return template
+      .replace(/\${ENTITY}/g, entityName)
+      .replace(/\${entityLower}/g, entityLower);
+  }
 
-  // ===== FUNCIONES PARA GENERAR ARCHIVOS =====
 
+  //-----------------------------
+  //-----------------------------
+  //-----------------------------
+  //-----------------------------
+  //-----------------------------
+  //-----------------------------
+  //-----------------------------
+  // Función para generar y descargar los archivos CRUD
+  // Función para generar y agregar los archivos CRUD al ZIP
+  // Función para generar y agregar los archivos CRUD al ZIP dentro de Back_End_Spring
   generateCRUDFiles(zip: JSZip, entityName: string): void {
-    const modelContent = this.generateContent(this.PHP_MODEL_TEMPLATE, entityName);
-    const controllerContent = this.generateContent(this.PHP_CONTROLLER_TEMPLATE, entityName);
-  
-    // Modelo
-    zip.file(`${this.ZIP_STRUCTURE.model}${entityName}.php`, modelContent);
-  
-    // Controlador
-    zip.file(`${this.ZIP_STRUCTURE.controller}${entityName}Controller.php`, controllerContent);
+    const baseFolder = 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/';
+
+    // Generar y agregar Repositorio
+    const repositoryContent = this.generateContent(this.RepositoryTemplate, entityName);
+    zip.file(`${baseFolder}repository/${entityName}Repository.java`, repositoryContent);
+
+    // Generar y agregar Servicio (Interfaz)
+    const serviceInterfaceContent = this.generateContent(this.ServiceInterfaceTemplate, entityName);
+    zip.file(`${baseFolder}service/${entityName}Service.java`, serviceInterfaceContent);
+
+    // Generar y agregar Controlador
+    const controllerContent = this.generateContent(this.ControllerTemplate, entityName);
+    zip.file(`${baseFolder}controller/${entityName}Controller.java`, controllerContent);
   }
-  
 
 
+
+
+  // Función para generar y descargar CRUD para todas las entidades
+  generateAllCRUDs(classDefinitions: string[]): void {
+    // Crear una nueva instancia de JSZip
+    const zip = new JSZip();
+
+    classDefinitions.forEach((classDef, index) => {
+      const classNameMatch = classDef.match(/public class\s+(\w+)/);
+      const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
+
+      // Pasa la instancia del zip y el nombre de la clase a generateCRUDFiles
+      this.generateCRUDFiles(zip, className);
+    });
+
+    // Generar el archivo ZIP y descargarlo al final
+    zip.generateAsync({ type: 'blob' }).then((blob) => {
+      saveAs(blob, 'Back_End_Spring_CRUDs.zip');
+    });
+  }
+
+  // Función para generar y descargar las entidades y capas CRUD
+  // Función para generar y descargar las entidades y capas CRUD
+  // Función para generar y agregar las entidades y los archivos CRUD al ZIP
+  // Función para generar y agregar las entidades y los archivos CRUD al ZIP sin eliminar archivos existentes
   async generateEntityFiles(content: string) {
-    const classPattern = /class\s+(\w+)\s*\{/gm;
+    // Expresión regular para encontrar todo el bloque desde "package" hasta el cierre de la clase "}"
+    const classPattern = /package[\s\S]*?\n}\s*$/gm;
     const classDefinitions = content.match(classPattern);
-  
+
     if (classDefinitions && classDefinitions.length > 0) {
+      // Crear una instancia de JSZip
       const zip = new JSZip();
-  
-      // Crear conexión SOLO UNA VEZ
-      zip.file(`${this.ZIP_STRUCTURE.database}Conexion.php`, this.PHP_DATABASE_TEMPLATE);
-  
+
+      // Aquí mantendremos la estructura de la carpeta Back_End_Spring
+      const baseFolder = 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/';
+
       classDefinitions.forEach((classDef, index) => {
-        const classNameMatch = classDef.match(/class\s+(\w+)/);
+        // Extraer el nombre de la clase para usarlo como nombre de archivo
+        const classNameMatch = classDef.match(/public class\s+(\w+)/);
         const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
-  
+
+        // Agregar el archivo de la entidad al ZIP dentro de la carpeta de entidad
+        const entityContent = classDef;
+        zip.file(`${baseFolder}entity/${className}.java`, entityContent);
+
+        // Generar y agregar los archivos CRUD (Repositorio, Servicio y Controlador) al ZIP dentro de las carpetas respectivas
         this.generateCRUDFiles(zip, className);
       });
-  
+
+      // Generar el archivo ZIP y descargarlo
       zip.generateAsync({ type: 'blob' }).then((blob) => {
-        saveAs(blob, 'Back_End_PHP_MVC.zip');
+        saveAs(blob, 'Back_End_Spring_CRUDs.zip');
       });
     } else {
-      console.error('No se encontraron clases PHP en el contenido proporcionado.');
+      console.error('No se encontraron clases en el contenido proporcionado.');
     }
   }
-  
-
-
-  generateContent(template: string, entityName: string, classBody?: string): string {
-    const entityLower = entityName.charAt(0).toLowerCase() + entityName.slice(1);
-    let result = template
-      .replace(/\${ENTITY}/g, entityName)
-      .replace(/\${entityLower}/g, entityLower)
-      .replace(/\${ENTITY_LOWER}/g, entityLower);
-  
-    if (classBody) {
-      // Extraer todos los atributos públicos de la clase PHP
-      const attributes = [...classBody.matchAll(/public\s+\$(\w+)/g)].map(match => match[1]);
-  
-      if (attributes.length === 0) {
-        console.warn(`No se encontraron atributos en la clase ${entityName}`);
-      }
-  
-      // Código de atributos
-      const attributesCode = attributes.map(attr => `public $${attr};`).join('\n    ');
-  
-      // Constructor: parámetros
-      const constructorParameters = attributes.map(attr => `$${attr} = null`).join(', ');
-  
-      // Constructor: asignaciones
-      const constructorAssignments = attributes.map(attr => `$this->${attr} = $${attr};`).join('\n        ');
-  
-      // Campos para INSERT
-      const fields = attributes.map(attr => attr).join(', ');
-  
-      // Placeholders para INSERT
-      const placeholders = attributes.map(attr => `:${attr}`).join(', ');
-  
-      // Binds para INSERT/UPDATE
-      const bindParameters = attributes.map(attr => `$stmt->bindParam(':${attr}', $this->${attr});`).join('\n        ');
-  
-      // Campos para UPDATE
-      const updateFields = attributes.map(attr => `${attr} = :${attr}`).join(', ');
-  
-      // Reemplazar en la plantilla
-      result = result
-        .replace('${ATTRIBUTES}', attributesCode)
-        .replace('${CONSTRUCTOR_PARAMETERS}', constructorParameters)
-        .replace('${CONSTRUCTOR_ASSIGNMENTS}', constructorAssignments)
-        .replace('${FIELDS}', fields)
-        .replace('${PLACEHOLDERS}', placeholders)
-        .replace('${BIND_PARAMETERS}', bindParameters)
-        .replace('${UPDATE_FIELDS}', updateFields);
-    }
-  
-    return result;
-  }
-  
-
 
 
 
@@ -533,7 +534,35 @@ export class DiagramComponent implements OnInit {
 
     // Añadir contexto a la solicitud de Gemini
     const context = `
- Eres un experto en UML y en la creación de sistemas PHP utilizando el patrón MVC (Modelo-Vista-Controlador). A partir del siguiente JSON, quiero que generes las clases Modelo y Controlador en PHP, asegurándote de capturar correctamente las relaciones entre las clases, así como la estructura necesaria para manipular una base de datos MySQL. Detalles importantes: Cada clase debe ser creada como un Modelo PHP (models/NombreClase.php) con atributos públicos. Cada clase debe tener un Controlador PHP (controllers/NombreClaseController.php) que implemente operaciones básicas: Crear (Insertar), Leer (Consultar), Actualizar y Eliminar registros (CRUD). Usa conexión básica a MySQL mediante una clase database/Conexion.php que maneje la conexión PDO. Para las relaciones: Si hay una relación 1..* o *..1 entre clases, el Modelo debe contener un atributo para la clave foránea (FK) apuntando al ID de la otra entidad. Si encuentras una relación 1..1, añade también un atributo de FK simple, haciendo referencia al ID relacionado. Si encuentras una clase intermedia (nombre contiene ClassIntermedia), representa una relación muchos a muchos. La clase intermedia debe tener dos atributos FK que referencien a las dos clases conectadas. Las otras clases no deben tener FK relacionadas hacia la clase intermedia. En caso de Herencia (línea de tipo M 0 -10 -15 0 0 10): La clase hija debe extender (extends) de la clase padre. En caso de Composición (línea de tipo M 0 -5 10 0 0 5 -10 0 z): La clase que participa debe tener la FK hacia el objeto compuesto. En caso de Agregación (línea de tipo M 0 -5 11 0 0 5 -11 0): Similar a Composición, la clase debe tener una FK hacia la entidad agregada. Formato de respuesta: Primero genera el contenido del archivo models/NombreClase.php. Luego genera el contenido del archivo controllers/NombreClaseController.php. Opcionalmente, incluye un archivo database/Conexion.php de conexión PDO si es necesario. Normas adicionales: No generes comentarios dentro del código. Mantén el código en PHP puro, orientado a objetos. No generes ningún código relacionado a Java, JPA, Hibernate ni Spring Boot. Usa clases simples y métodos públicos en los controladores: create(), read(), update(), delete(). La respuesta de cada archivo debe comenzar estrictamente con: PHP: <?php namespace App\models; o <?php namespace App\controllers;
+  Eres un experto en UML y en la creación de entidades Java utilizando Spring Boot con JPA. A partir del siguiente JSON, quiero que generes entidades en Java asegurándote de capturar correctamente las relaciones entre las clases. Utiliza las siguientes anotaciones de JPA donde sea necesario: @Entity, @Table, @Id, @GeneratedValue, @OneToMany, @ManyToOne, @OneToOne, @JoinColumn, y @ManyToMany.
+Para la FK basate en el id de la app.class y es
+Detalles importantes: : no me generes comentarios dentro de tu respuesta, ademas para identificar a un clase con su cardinalidad solo necesicomparar el "id" que esta dentro del app.link un componente y compararlo con el "id" de app.clase
+Usa @ManyToOne y @OneToMany solo cuando haya una relación 1..* o *..1, y usa Joincolum para agregar la llave foranea
+No añadas claves foráneas (FK) en las clases A o B si hay una clase intermedia que maneja la relación.
+Usa @OneToOne solo cuando la relación sea 1..1.
+Usa @ManyToMany solo si hay una relación de muchos a muchos, y en este caso, usa una clase intermedia con dos claves foráneas para las dos clases conectadas por la relación.
+
+ Si el valor es en un figura de la linea M 0 -10 -15 0 0 10  : Representa una Herencia . Asegúrate de que la subclase dependa de la clase padre (agregale a la clase hija el extends a la padre osea a la que esta conectada no a ella misma o al revez ), aplicando las anotaciones de JPA necesarias.
+
+Clase Intermedia:
+Si encuentras una clase cuyo nombre contiene "ClassIntermedia", representa una relación muchos a muchos. La clase intermedia debe tener dos claves foráneas (FK) que correspondan a las dos clases conectadas por las líneas,
+ pero las clases conectadas extrictamente no deben tener FK hacia la clase intermedia.
+  las clases conectadas extrictamente no deben tener FK hacia la clase intermedia solo ManyToOne
+Asegúrate de que la clase intermedia tenga dos JoinColumn y relaciones ManyToOne con las clases conectadas,ademas las otras clases no deben tener FK relacionadas con la clase intermedia.
+Composición, Agregación y Herencia:
+Si la flecha tiene una propiedad sourceMarker con valor M 0 -5 10 0 0 5 -10 0 z: Representa una Composició . La clase que la conecta debe tener una FK, pero no a sí misma.
+ Si el valor es M 0 -10 -15 0 0 10  : Representa una Herencia . Asegúrate de que la subclase dependa de la clase padre (agregale a la clase hija el extends a la padre ), aplicando las anotaciones de JPA necesarias.
+ Si el valor es M 0 -5 11 0 0 5 -11 0  : Representa una Agregació . Asegúrate de que la clase que la conecta tenga una FK, pero no a sí misma.
+
+la respuesta que me des debe tener en cada clase que me generes debe comenzar estrictamente con ejemplo , package...nombreclase..,package..nombreclase...:
+
+package com.phegondev.usersmanagementsystem.entity;
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "NombreDeLaClase = esta dentro de "nombreclase")
+@Data
     `;
 
     const messageToSend = `${context}\n\n${graphText}`;
@@ -565,72 +594,61 @@ export class DiagramComponent implements OnInit {
 
   // Función para descargar el archivo .java
   // Función para descargar el archivo .java y generar CRUD
-  downloadAsPHPFile(content: string, className: string, isEntity: boolean = true): void {
-    const zip = new JSZip(); // Creamos un ZIP aquí (modo descarga estructurada)
-    
+  downloadAsJavaFile(content: string, className: string, isEntity: boolean = true): void {
+    // Descargar el archivo de la entidad o CRUD
+    const blob = new Blob([content], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${className}.java`;  // Nombre del archivo basado en el nombre de la clase
+    link.click();
+
+    // Si es una entidad, generar y descargar los archivos CRUD
     if (isEntity) {
-      // Si es entidad (Modelo)
-  
-      // Modelo
-      const modelContent = this.generateContent(this.PHP_MODEL_TEMPLATE, className);
-      zip.file(`BACK_END_PHP/models/${className}.php`, modelContent);
-  
-      // Controlador
-      const controllerContent = this.generateContent(this.PHP_CONTROLLER_TEMPLATE, className);
-      zip.file(`BACK_END_PHP/controllers/${className}Controller.php`, controllerContent);
-  
-      // Conexión (solo una vez, puedes validar después)
-      zip.file(`BACK_END_PHP/database/Conexion.php`, this.PHP_DATABASE_TEMPLATE);
-  
-      // Finalmente, generar el ZIP
-      zip.generateAsync({ type: 'blob' }).then((blob) => {
-        saveAs(blob, 'Back_End_PHP_MVC.zip');
-      });
-  
-    } else {
-      // Si no es entidad, simplemente descargar el archivo suelto
-      const blob = new Blob([content], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${className}.php`;
-      link.click();
+      const repositoryContent = this.generateContent(this.RepositoryTemplate, className);
+      const serviceInterfaceContent = this.generateContent(this.ServiceInterfaceTemplate, className);
+      const serviceImplContent = this.generateContent(this.ServiceImplTemplate, className);
+      const controllerContent = this.generateContent(this.ControllerTemplate, className);
+
+      // Descargar los archivos CRUD sin generar más CRUD
+      this.downloadAsJavaFile(repositoryContent, `${className}Repository`, false);
+      this.downloadAsJavaFile(serviceInterfaceContent, `${className}Service`, false);
+      this.downloadAsJavaFile(serviceImplContent, `${className}ServiceImpl`, false);
+      this.downloadAsJavaFile(controllerContent, `${className}Controller`, false);
     }
   }
-  
+
+
+  generateEntityFiles1(content: string) {
+    // Expresión regular actualizada para encontrar todo el bloque desde "package" hasta el cierre de la clase "}"
+    const classPattern = /package[\s\S]*?\n}\s*$/gm;
+
+    // Encuentra todas las clases que coincidan con este patrón
+    const classDefinitions = content.match(classPattern);
+
+    if (classDefinitions) {
+      classDefinitions.forEach((classDef, index) => {
+        // Extraer el nombre de la clase para usarlo como nombre de archivo
+        const classNameMatch = classDef.match(/public class\s+(\w+)/);
+        const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
+
+        // Crear y descargar el archivo .java
+        this.downloadAsJavaFile(classDef, className);
+      });
+    } else {
+      console.error('No se encontraron clases en el contenido proporcionado.');
+    }
+  }
 
 
 
-//   generateEntityFiles1(content: string) {
-//   const classPattern = /class\s+(\w+)\s*{([\s\S]*?)}/gm;
-//   let match;
-//   let createdDatabaseFile = false;
-
-//   while ((match = classPattern.exec(content)) !== null) {
-//     const className = match[1];  // Nombre de la clase
-//     const classBody = match[2];  // Cuerpo de la clase
-
-//     const modelContent = this.generateContent(this.PHP_MODEL_TEMPLATE, className, classBody);
-//     const controllerContent = this.generateContent(this.PHP_CONTROLLER_TEMPLATE, className);
-
-//     this.downloadAsPHPFile(modelContent, `models/${className}`);
-//     this.downloadAsPHPFile(controllerContent, `controllers/${className}Controller`);
-//   }
-
-//   // Solo descargar Conexion.php una vez
-//   if (!createdDatabaseFile) {
-//     this.downloadAsPHPFile(this.PHP_DATABASE_TEMPLATE, `database/Conexion`);
-//     createdDatabaseFile = true;
-//   }
-// }
-
-// downloadAsPHPFile1(content: string, filePath: string): void {
-//   const blob = new Blob([content], { type: 'text/plain' });
-//   const link = document.createElement('a');
-//   link.href = URL.createObjectURL(blob);
-//   link.download = `${filePath}.php`;  // filePath ya tiene carpeta + nombre
-//   link.click();
-// }
-
+  // Función para descargar el archivo .java
+  downloadAsJavaFile1(content: string, className: string) {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${className}.java`;  // Nombre del archivo basado en el nombre de la clase
+    link.click();
+  }
 
 
   // Función para eliminar las secciones innecesarias del JSON
