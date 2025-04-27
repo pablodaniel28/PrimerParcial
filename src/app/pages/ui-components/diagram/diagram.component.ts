@@ -431,6 +431,7 @@ la respuesta que me des debe tener en cada clase que me generes debe comenzar es
 package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 
 @Entity
 @Table(name = "NombreDeLaClase = esta dentro de "nombreclase")
