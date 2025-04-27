@@ -36,232 +36,6 @@ export class DiagramComponent implements OnInit {
   chatGPTResponse: string = '';  // Para almacenar la respuesta de ChatGPT
 
 
-  private ZIP_STRUCTURE = {
-    controller: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/controller/',
-    entity: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/entity/',
-    repository: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/repository/',
-    service: 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/service/',
-  };
-
-  RepositoryTemplate: string = `
-  package com.phegondev.usersmanagementsystem.repository;
-
-  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
-  import org.springframework.data.jpa.repository.JpaRepository;
-  import org.springframework.stereotype.Repository;
-
-  @Repository
-  public interface \${ENTITY}Repository extends JpaRepository<\${ENTITY}, Long> {
-  }
-  `;
-
-
-  ServiceInterfaceTemplate: string = `
-  package com.phegondev.usersmanagementsystem.service;
-
-  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
-  import java.util.List;
-  import java.util.Optional;
-
-  public interface \${ENTITY}Service {
-      \${ENTITY} save\${ENTITY}(\${ENTITY} \${entityLower});
-      List<\${ENTITY}> getAll\${ENTITY}s();
-      Optional<\${ENTITY}> get\${ENTITY}ById(Long id);
-      \${ENTITY} update\${ENTITY}(Long id, \${ENTITY} \${entityLower}Details);
-      void delete\${ENTITY}(Long id);
-  }
-  `;
-  ServiceImplTemplate: string = `
-  package com.phegondev.usersmanagementsystem.service.impl;
-
-  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
-  import com.phegondev.usersmanagementsystem.repository.\${ENTITY}Repository;
-  import com.phegondev.usersmanagementsystem.service.\${ENTITY}Service;
-  import org.springframework.beans.factory.annotation.Autowired;
-  import org.springframework.stereotype.Service;
-
-  import java.util.List;
-  import java.util.Optional;
-
-  @Service
-  public class \${ENTITY}ServiceImpl implements \${ENTITY}Service {
-
-      @Autowired
-      private \${ENTITY}Repository \${entityLower}Repository;
-
-      @Override
-      public \${ENTITY} save\${ENTITY}(\${ENTITY} \${entityLower}) {
-          return \${entityLower}Repository.save(\${entityLower});
-      }
-
-      @Override
-      public List<\${ENTITY}> getAll\${ENTITY}s() {
-          return \${entityLower}Repository.findAll();
-      }
-
-      @Override
-      public Optional<\${ENTITY}> get\${ENTITY}ById(Long id) {
-          return \${entityLower}Repository.findById(id);
-      }
-
-      @Override
-      public \${ENTITY} update\${ENTITY}(Long id, \${ENTITY} \${entityLower}Details) {
-          \${ENTITY} \${entityLower} = \${entityLower}Repository.findById(id)
-                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
-          // Actualiza los campos necesarios
-          return \${entityLower}Repository.save(\${entityLower});
-      }
-
-      @Override
-      public void delete\${ENTITY}(Long id) {
-          \${ENTITY} \${entityLower} = \${entityLower}Repository.findById(id)
-                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
-          \${entityLower}Repository.delete(\${entityLower});
-      }
-  }
-  `;
-  ControllerTemplate: string = `
-  package com.phegondev.usersmanagementsystem.controller;
-
-  import com.phegondev.usersmanagementsystem.entity.\${ENTITY};
-  import com.phegondev.usersmanagementsystem.service.\${ENTITY}Service;
-  import org.springframework.beans.factory.annotation.Autowired;
-  import org.springframework.http.ResponseEntity;
-  import org.springframework.web.bind.annotation.*;
-  import java.util.List;
-
-  @RestController
-  @RequestMapping("/api/\${entityLower}s")
-  public class \${ENTITY}Controller {
-
-      @Autowired
-      private \${ENTITY}Service \${entityLower}Service;
-
-      @PostMapping
-      public \${ENTITY} create\${ENTITY}(@RequestBody \${ENTITY} \${entityLower}) {
-          return \${entityLower}Service.save\${ENTITY}(\${entityLower});
-      }
-
-      @GetMapping
-      public List<\${ENTITY}> getAll\${ENTITY}s() {
-          return \${entityLower}Service.getAll\${ENTITY}s();
-      }
-
-      @GetMapping("/{id}")
-      public ResponseEntity<\${ENTITY}> get\${ENTITY}ById(@PathVariable Long id) {
-          \${ENTITY} \${entityLower} = \${entityLower}Service.get\${ENTITY}ById(id)
-                  .orElseThrow(() -> new RuntimeException("\${ENTITY} not found for id :: " + id));
-          return ResponseEntity.ok().body(\${entityLower});
-      }
-
-      @PutMapping("/{id}")
-      public \${ENTITY} update\${ENTITY}(@PathVariable Long id, @RequestBody \${ENTITY} \${entityLower}Details) {
-          return \${entityLower}Service.update\${ENTITY}(id, \${entityLower}Details);
-      }
-
-      @DeleteMapping("/{id}")
-      public ResponseEntity<Void> delete\${ENTITY}(@PathVariable Long id) {
-          \${entityLower}Service.delete\${ENTITY}(id);
-          return ResponseEntity.noContent().build();
-      }
-  }
-  `;
-  // Función para reemplazar los marcadores de posición en las plantillas
-  generateContent(template: string, entityName: string): string {
-    const entityLower = entityName.charAt(0).toLowerCase() + entityName.slice(1);
-    return template
-      .replace(/\${ENTITY}/g, entityName)
-      .replace(/\${entityLower}/g, entityLower);
-  }
-
-
-  //-----------------------------
-  //-----------------------------
-  //-----------------------------
-  //-----------------------------
-  //-----------------------------
-  //-----------------------------
-  //-----------------------------
-  // Función para generar y descargar los archivos CRUD
-  // Función para generar y agregar los archivos CRUD al ZIP
-  // Función para generar y agregar los archivos CRUD al ZIP dentro de Back_End_Spring
-  generateCRUDFiles(zip: JSZip, entityName: string): void {
-    const baseFolder = 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/';
-
-    // Generar y agregar Repositorio
-    const repositoryContent = this.generateContent(this.RepositoryTemplate, entityName);
-    zip.file(`${baseFolder}repository/${entityName}Repository.java`, repositoryContent);
-
-    // Generar y agregar Servicio (Interfaz)
-    const serviceInterfaceContent = this.generateContent(this.ServiceInterfaceTemplate, entityName);
-    zip.file(`${baseFolder}service/${entityName}Service.java`, serviceInterfaceContent);
-
-    // Generar y agregar Controlador
-    const controllerContent = this.generateContent(this.ControllerTemplate, entityName);
-    zip.file(`${baseFolder}controller/${entityName}Controller.java`, controllerContent);
-  }
-
-
-
-
-  // Función para generar y descargar CRUD para todas las entidades
-  generateAllCRUDs(classDefinitions: string[]): void {
-    // Crear una nueva instancia de JSZip
-    const zip = new JSZip();
-
-    classDefinitions.forEach((classDef, index) => {
-      const classNameMatch = classDef.match(/public class\s+(\w+)/);
-      const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
-
-      // Pasa la instancia del zip y el nombre de la clase a generateCRUDFiles
-      this.generateCRUDFiles(zip, className);
-    });
-
-    // Generar el archivo ZIP y descargarlo al final
-    zip.generateAsync({ type: 'blob' }).then((blob) => {
-      saveAs(blob, 'Back_End_Spring_CRUDs.zip');
-    });
-  }
-
-  // Función para generar y descargar las entidades y capas CRUD
-  // Función para generar y descargar las entidades y capas CRUD
-  // Función para generar y agregar las entidades y los archivos CRUD al ZIP
-  // Función para generar y agregar las entidades y los archivos CRUD al ZIP sin eliminar archivos existentes
-  async generateEntityFiles(content: string) {
-    // Expresión regular para encontrar todo el bloque desde "package" hasta el cierre de la clase "}"
-    const classPattern = /package[\s\S]*?\n}\s*$/gm;
-    const classDefinitions = content.match(classPattern);
-
-    if (classDefinitions && classDefinitions.length > 0) {
-      // Crear una instancia de JSZip
-      const zip = new JSZip();
-
-      // Aquí mantendremos la estructura de la carpeta Back_End_Spring
-      const baseFolder = 'Back_End_Spring/src/main/java/com/phegondev/usersmanagementsystem/';
-
-      classDefinitions.forEach((classDef, index) => {
-        // Extraer el nombre de la clase para usarlo como nombre de archivo
-        const classNameMatch = classDef.match(/public class\s+(\w+)/);
-        const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
-
-        // Agregar el archivo de la entidad al ZIP dentro de la carpeta de entidad
-        const entityContent = classDef;
-        zip.file(`${baseFolder}entity/${className}.java`, entityContent);
-
-        // Generar y agregar los archivos CRUD (Repositorio, Servicio y Controlador) al ZIP dentro de las carpetas respectivas
-        this.generateCRUDFiles(zip, className);
-      });
-
-      // Generar el archivo ZIP y descargarlo
-      zip.generateAsync({ type: 'blob' }).then((blob) => {
-        saveAs(blob, 'Back_End_Spring_CRUDs.zip');
-      });
-    } else {
-      console.error('No se encontraron clases en el contenido proporcionado.');
-    }
-  }
-
-
 
 
 
@@ -335,22 +109,7 @@ export class DiagramComponent implements OnInit {
       useModelGeometry: true,
     });
 
-    // this.rappid.paper.on('element:pointerdown', (elementView) => {
-    //   // Mostrar inspector cuando se selecciona una figura
-    //   this.inspectorService.create(elementView.model);
-    // });
 
-    // this.rappid.paper.on('blank:pointerdown', () => {
-    //   // Ocultar inspector cuando se hace clic en el área vacía
-    //   this.inspectorService.hideInspector();
-    // });
-
-    // Monitorear cuando no hay figuras seleccionadas
-    // this.selection.collection.on('reset', () => {
-    //   if (this.selection.collection.isEmpty()) {
-    //     this.inspectorService.hideInspector();  // Ocultar inspector si no hay figuras seleccionadas
-    //   }
-    // });
 
     // Añadir selección manual
     this.rappid.paper.on('element:pointerdown', (elementView, evt) => {
@@ -364,12 +123,6 @@ export class DiagramComponent implements OnInit {
     this.rappid.paper.on('blank:pointerdown', () => {
       this.selection.collection.reset([]);
     });
-
-    //   this.rappid.paper.on('element:pointerdown', (elementView, evt) => {
-    //     if (!evt.data || !evt.data.moved) {  // Solo seleccionar si no se está arrastrando
-    //         this.selection.collection.reset([elementView.model]);  // Seleccionar solo con clic
-    //     }
-    // });
 
   }
 
@@ -523,6 +276,125 @@ export class DiagramComponent implements OnInit {
   }
 
 
+
+  ///INICIOO////
+
+  private ZIP_STRUCTURE = {
+    controller: 'demo/src/main/java/com/example/demo/controller/',
+    entity: 'demo/src/main/java/com/example/demo/entity/',
+    repository: 'demo/src/main/java/com/example/demo/repository/',
+    service: 'demo/src/main/java/com/example/demo/service/',
+  };
+
+  RepositoryTemplate: string = `
+  package com.example.demo.repository;
+
+  import com.example.demo.entity.\${ENTITY};
+  import org.springframework.data.jpa.repository.JpaRepository;
+  import org.springframework.stereotype.Repository;
+
+  @Repository
+  public interface \${ENTITY}Repository extends JpaRepository<\${ENTITY}, Long> {
+  }
+  `;
+
+
+
+  ServiceImplTemplate: string = `
+package com.example.demo.service;
+
+import com.example.demo.entity.\${ENTITY};
+import com.example.demo.repository.\${ENTITY}Repository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class \${ENTITY}Service {
+
+    @Autowired
+    private \${ENTITY}Repository \${entityLower}Repository;
+
+    public List<\${ENTITY}> getAll\${ENTITY}s() {
+        return \${entityLower}Repository.findAll();
+    }
+
+    public Optional<\${ENTITY}> get\${ENTITY}ById(Long id) {
+        return \${entityLower}Repository.findById(id);
+    }
+
+    public \${ENTITY} create\${ENTITY}(\${ENTITY} \${entityLower}) {
+        return \${entityLower}Repository.save(\${entityLower});
+    }
+
+    public Optional<\${ENTITY}> update\${ENTITY}(Long id, \${ENTITY} \${entityLower}Details) {
+        return \${entityLower}Repository.findById(id).map(\${entityLower} -> {
+            BeanUtils.copyProperties(\${entityLower}Details, \${entityLower}, "id"); // No sobreescribe el id
+            return \${entityLower}Repository.save(\${entityLower});
+        });
+    }
+
+    public void delete\${ENTITY}(Long id) {
+        \${entityLower}Repository.deleteById(id);
+    }
+}
+`;
+
+
+  ControllerTemplate: string = `
+package com.example.demo.controller;
+
+import com.example.demo.entity.\${ENTITY};
+import com.example.demo.service.\${ENTITY}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/\${entityLower}s")
+public class \${ENTITY}Controller {
+
+    @Autowired
+    private \${ENTITY}Service \${entityLower}Service;
+
+    @PostMapping
+    public \${ENTITY} create\${ENTITY}(@RequestBody \${ENTITY} \${entityLower}) {
+        return \${entityLower}Service.create\${ENTITY}(\${entityLower});
+    }
+
+    @GetMapping
+    public List<\${ENTITY}> getAll\${ENTITY}s() {
+        return \${entityLower}Service.getAll\${ENTITY}s();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<\${ENTITY}> get\${ENTITY}ById(@PathVariable Long id) {
+        return \${entityLower}Service.get\${ENTITY}ById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<\${ENTITY}> update\${ENTITY}(@PathVariable Long id, @RequestBody \${ENTITY} \${entityLower}Details) {
+        return \${entityLower}Service.update\${ENTITY}(id, \${entityLower}Details)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete\${ENTITY}(@PathVariable Long id) {
+        \${entityLower}Service.delete\${ENTITY}(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+`;
+
+
+
   sendDiagramWithContext() {
     const graphJSON = this.rappid.graph.toJSON();
 
@@ -556,13 +428,17 @@ Si la flecha tiene una propiedad sourceMarker con valor M 0 -5 10 0 0 5 -10 0 z:
 
 la respuesta que me des debe tener en cada clase que me generes debe comenzar estrictamente con ejemplo , package...nombreclase..,package..nombreclase...:
 
-package com.phegondev.usersmanagementsystem.entity;
+package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "NombreDeLaClase = esta dentro de "nombreclase")
 @Data
+- **IMPORTANTE**: si es un ID, debes declararlo estrictamente así java
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
     `;
 
     const messageToSend = `${context}\n\n${graphText}`;
@@ -592,63 +468,251 @@ import lombok.Data;
     );
   }
 
-  // Función para descargar el archivo .java
-  // Función para descargar el archivo .java y generar CRUD
-  downloadAsJavaFile(content: string, className: string, isEntity: boolean = true): void {
-    // Descargar el archivo de la entidad o CRUD
-    const blob = new Blob([content], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${className}.java`;  // Nombre del archivo basado en el nombre de la clase
-    link.click();
 
-    // Si es una entidad, generar y descargar los archivos CRUD
-    if (isEntity) {
-      const repositoryContent = this.generateContent(this.RepositoryTemplate, className);
-      const serviceInterfaceContent = this.generateContent(this.ServiceInterfaceTemplate, className);
-      const serviceImplContent = this.generateContent(this.ServiceImplTemplate, className);
-      const controllerContent = this.generateContent(this.ControllerTemplate, className);
 
-      // Descargar los archivos CRUD sin generar más CRUD
-      this.downloadAsJavaFile(repositoryContent, `${className}Repository`, false);
-      this.downloadAsJavaFile(serviceInterfaceContent, `${className}Service`, false);
-      this.downloadAsJavaFile(serviceImplContent, `${className}ServiceImpl`, false);
-      this.downloadAsJavaFile(controllerContent, `${className}Controller`, false);
+  async generateEntityFiles(content: string) {
+    const pomxml: string = `
+  <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.4</version> <!-- ✅ Spring Boot 3.2.4 -->
+		<relativePath/>
+	</parent>
+
+	<groupId>com.phegondev</groupId>  <!-- ✅ tu nuevo groupId -->
+	<artifactId>usersmanagementsystem</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>usersmanagementsystem</name>
+	<description>Demo project for Spring Boot</description>
+
+	<properties>
+		<java.version>21</java.version> <!-- ✅ Java 21 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!-- Spring Boot Core -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- Spring Boot Web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Spring Boot JPA (Base de datos) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL Driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Lombok (reducción de código) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- JWT -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Jackson JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+    `;
+
+    const applicationProperties: string = `
+  spring.application.name=demo
+  spring.datasource.url=jdbc:postgresql://localhost:5432/demo
+  spring.datasource.username=postgres
+  spring.datasource.password=daniel2804
+  spring.datasource.driver-class-name=org.postgresql.Driver
+
+  spring.jpa.hibernate.ddl-auto=update
+    `;
+
+    const webSecurityConfig: string = `
+package com.example.demo.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class WebSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Desactiva CSRF (para APIs REST)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").permitAll() // Permite todas las rutas /api/**
+                        .anyRequest().permitAll()               // Permite todo
+                );
+        return http.build();
     }
-  }
+}
+  `;
 
-
-  generateEntityFiles1(content: string) {
-    // Expresión regular actualizada para encontrar todo el bloque desde "package" hasta el cierre de la clase "}"
+    // Buscar clases
     const classPattern = /package[\s\S]*?\n}\s*$/gm;
-
-    // Encuentra todas las clases que coincidan con este patrón
     const classDefinitions = content.match(classPattern);
 
-    if (classDefinitions) {
+    if (classDefinitions && classDefinitions.length > 0) {
+      const zip = new JSZip();
+
+      const baseFolder = 'demo/src/main/java/com/example/demo/';
+
+      // 💥 pom.xml
+      zip.file('demo/pom.xml', pomxml);
+
+      // 💥 application.properties
+      zip.file('demo/src/main/resources/application.properties', applicationProperties);
+
+      // 💥 DemoApplication.java
+      zip.file(`${baseFolder}DemoApplication.java`, `
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+}
+    `);
+
+      // 💥 WebSecurityConfig.java en config/
+      zip.file(`${baseFolder}config/WebSecurityConfig.java`, webSecurityConfig);
+
+      // 💥 Entidades, CRUD
       classDefinitions.forEach((classDef, index) => {
-        // Extraer el nombre de la clase para usarlo como nombre de archivo
         const classNameMatch = classDef.match(/public class\s+(\w+)/);
         const className = classNameMatch ? classNameMatch[1] : `Entity${index}`;
 
-        // Crear y descargar el archivo .java
-        this.downloadAsJavaFile(classDef, className);
+        zip.file(`${baseFolder}entity/${className}.java`, classDef);
+
+        this.generateCRUDFiles(zip, className);
       });
+
+      // 💥 Descargar todo
+      zip.generateAsync({ type: 'blob' }).then((blob) => {
+        saveAs(blob, 'demo.zip');
+      });
+
     } else {
-      console.error('No se encontraron clases en el contenido proporcionado.');
+      console.error('⚠️ No se encontraron clases válidas en el contenido proporcionado.');
     }
   }
 
 
 
-  // Función para descargar el archivo .java
-  downloadAsJavaFile1(content: string, className: string) {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${className}.java`;  // Nombre del archivo basado en el nombre de la clase
-    link.click();
+
+  generateCRUDFiles(zip: JSZip, entityName: string): void {
+    const baseFolder = 'demo/src/main/java/com/example/demo/';
+
+    // Generar y agregar Repositorio
+    const repositoryContent = this.generateContent(this.RepositoryTemplate, entityName);
+    zip.file(`${baseFolder}repository/${entityName}Repository.java`, repositoryContent);
+
+    // Generar y agregar Servicio (Interfaz)
+    const serviceInterfaceContent = this.generateContent(this.ServiceImplTemplate, entityName);
+    zip.file(`${baseFolder}service/${entityName}Service.java`, serviceInterfaceContent);
+
+    // Generar y agregar Controlador
+    const controllerContent = this.generateContent(this.ControllerTemplate, entityName);
+    zip.file(`${baseFolder}controller/${entityName}Controller.java`, controllerContent);
   }
+
+
+  // Función para reemplazar los marcadores de posición en las plantillas
+  generateContent(template: string, entityName: string): string {
+    const entityLower = entityName.charAt(0).toLowerCase() + entityName.slice(1);
+    return template
+      .replace(/\${ENTITY}/g, entityName)
+      .replace(/\${entityLower}/g, entityLower);
+  }
+
+
+  //////FIN/////
 
 
   // Función para eliminar las secciones innecesarias del JSON
@@ -709,6 +773,4 @@ import lombok.Data;
       alert('Enlace copiado al portapapeles');
     }
   }
-
-
 }
