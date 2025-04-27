@@ -600,7 +600,7 @@ private Long id;
   spring.application.name=demo
   spring.datasource.url=jdbc:postgresql://localhost:5432/demo
   spring.datasource.username=postgres
-  spring.datasource.password=daniel2804
+  spring.datasource.password=
   spring.datasource.driver-class-name=org.postgresql.Driver
 
   spring.jpa.hibernate.ddl-auto=update
