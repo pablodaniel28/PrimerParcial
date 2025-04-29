@@ -57,7 +57,7 @@ export const UiComponentsRoutes: Routes = [
         component: AppTooltipsComponent,
       },
       {
-        path: 'aulas',  // Nueva ruta para AulaComponent
+        path: 'diagramador',  // Nueva ruta para AulaComponent
         component: DiagramComponent,
       },
 

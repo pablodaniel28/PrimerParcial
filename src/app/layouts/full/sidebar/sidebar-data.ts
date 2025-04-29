@@ -51,7 +51,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Diagramador',
     iconName: 'tooltip',
-    route: '/ui-components/aulas',
+    route: '/ui-components/diagramador',
   },
   // {
   //   displayName: 'Usuarios',

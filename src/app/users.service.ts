@@ -6,7 +6,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class UsersService {
 
-  private BASE_URL = "https://back-examen-production.up.railway.app";
+  // private BASE_URL = "https://back-examen-production.up.railway.app";
+  private BASE_URL = "http://localhost:8080"; // Cambia esto a tu URL base
   constructor(private http: HttpClient) { }
 
   async login(email:string, password:string):Promise<any>{
